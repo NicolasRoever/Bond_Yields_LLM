@@ -1,0 +1,20 @@
+# Ignore virtual environment directories
+venv/
+.env/
+env/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore data files
+*.pkl
+*.xlsx
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore other unwanted files
+*.log
+*.bak
+.DS_Store
