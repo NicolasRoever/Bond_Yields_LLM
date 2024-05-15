@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import dspy
+from dsp.modules.anthropic import Claude
 from dspy import OllamaLocal
 from groq import Groq
 
@@ -8,8 +9,9 @@ from groq import Groq
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 groq_api_key = os.getenv("GROQ_API_KEY")
+anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
 
-# Set up language models
+# Set up supported language models
 gpt35turbo = dspy.OpenAI(model = "gpt-3.5-turbo-0125",
                          api_key = openai_api_key,
                          temperature = 0,
@@ -28,6 +30,11 @@ gpt4o = dspy.OpenAI(model = "gpt-4o-2024-05-13",
                          max_tokens = 800,
                          model_type = "chat")
 
+haiku = Claude(model = "claude-3-haiku-20240307",
+               api_key = anthropic_api_key,
+               temperature = 0,
+               max_tokens = 800)
+
 llama3_8b = dspy.OllamaLocal(model = "llama3:8b",
                              temperature = 0,
                              max_tokens = 800)
@@ -39,5 +46,3 @@ llama3_70b = dspy.GROQ(model = "llama3-70b-8192",
 
 # Set up default lanugage model to be used when no particular one is specified in the signatures
 dspy.settings.configure(lm=llama3_8b)
-
-print(llama3_8b("What is the capital of Italy?"))
