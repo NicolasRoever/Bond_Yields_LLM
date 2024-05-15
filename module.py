@@ -8,7 +8,7 @@ from signatures.sentiment import SentimentAssessor
 class SentimentEvaluator(dspy.Module):
     def __init__(self):
         super().__init__()
-        self.role_summarizer = dspy.Predict(RoleSummarizer)
+        self.role_summarizer = dspy.ChainOfThought(RoleSummarizer)
         self.relevance_assessor = dspy.ChainOfThought(RelevanceAssessor)
         self.sentiment_assessor = dspy.ChainOfThought(SentimentAssessor)
 
@@ -16,9 +16,10 @@ class SentimentEvaluator(dspy.Module):
         country_role = self.role_summarizer(country_keyword=country_keyword, excerpt=excerpt).country_role
         relevance = self.relevance_assessor(country_keyword=country_keyword, country_role=country_role).relevance
         if relevance == "yes":
-            return self.sentiment_assessor(country_keyword=country_keyword, country_role=country_role).sentiment_score
+            sentiment_score = self.sentiment_assessor(country_keyword=country_keyword, country_role=country_role).sentiment_score
         else:
-            return "irrelevant"
+            sentiment_score = 99
+        return sentiment_score
         
 sentiment_evaluator = SentimentEvaluator()
 

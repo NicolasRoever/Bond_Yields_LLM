@@ -28,7 +28,7 @@ gpt4o = dspy.OpenAI(model = "gpt-4o-2024-05-13",
                          max_tokens = 800,
                          model_type = "chat")
 
-llama3_8b = dspy.OllamaLocal(model = "llama3:8b-instruct-q5_1",
+llama3_8b = dspy.OllamaLocal(model = "llama3:8b",
                              temperature = 0,
                              max_tokens = 800)
 
@@ -38,4 +38,6 @@ llama3_70b = dspy.GROQ(model = "llama3-70b-8192",
                        max_tokens = 800)
 
 # Set up default lanugage model to be used when no particular one is specified in the signatures
-dspy.settings.configure(lm=gpt4o)
+dspy.settings.configure(lm=llama3_8b)
+
+print(llama3_8b("What is the capital of Italy?"))
