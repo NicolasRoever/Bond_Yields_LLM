@@ -45,4 +45,4 @@ llama3_70b = dspy.GROQ(model = "llama3-70b-8192",
                        max_tokens = 800)
 
 # Set up default lanugage model to be used when no particular one is specified in the signatures
-dspy.settings.configure(lm=llama3_8b)
+dspy.settings.configure(lm=gpt4o)
