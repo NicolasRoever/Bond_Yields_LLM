@@ -9,7 +9,7 @@ __pycache__/
 
 # Ignore data files
 *.pkl
-*.xlsx
+# *.xlsx
 
 # Ignore VS Code settings
 .vscode/

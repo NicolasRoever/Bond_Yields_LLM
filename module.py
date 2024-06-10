@@ -30,17 +30,19 @@ sentiment_evaluator = SentimentEvaluator()
 
 results = []
 
-for example in examples:
-    sentiment_result = sentiment_evaluator(excerpt=example['excerpt'], country_keyword=example['country_keyword'])
+test = examples[:1]
+
+for item in test:
+    sentiment_result = sentiment_evaluator(excerpt=item['excerpt'], country_keyword=item['country_keyword'])
     sentiment_result['sentiment_rationale'] = sentiment_result['sentiment_rationale'].replace('\n', ' ')
+    sentiment_result['relevance_rationale'] = sentiment_result['relevance_rationale'].replace('\n', ' ')
+    sentiment_result['country_role'] = sentiment_result['country_role'].replace('\n', ' ')
     results.append({
-        'Snippet_ID': example['snippet_id'],
-        'Snippet': example['excerpt'],
-        'Keyword': example['country_keyword'],
+        'Snippet_ID': item['snippet_id'],
+        'Snippet': item['excerpt'],
+        'Keyword': item['country_keyword'],
         **sentiment_result
     })
 
 df = pd.DataFrame(results)
-df.to_csv('sentiment_results_llm.csv', index=False)
-
-print(df.head(5))
+df.to_csv('output/sentiment_results_llm.csv', index=False)
