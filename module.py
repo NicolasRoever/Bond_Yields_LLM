@@ -3,7 +3,7 @@ import pandas as pd
 
 from signatures.summarizer import RoleSummarizer
 from signatures.relevance import RelevanceAssessor
-from signatures.sentiment import SentimentAssessor
+from signatures.expectations import SentimentAssessor
 from data.preprocess import examples
 
 # Definition of pipeline that produces sentinment score and reasoning, given a text excerpt and a country keyword as input
