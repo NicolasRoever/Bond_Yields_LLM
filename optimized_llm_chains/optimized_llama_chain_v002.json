@@ -1,0 +1,71 @@
+{
+  "role_summarizer": {
+    "lm": null,
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "excerpt": "esult of one single area. but i would emphasize, as it was already stated, the contribution of trade finance and export related fees with a growth of 40% in the quarter, and overall in the year of 63%, as the result of the strategies that we put in place to reinforce and support the portuguese companies that are exporting, as well as to be present in the markets with more dynamic activity for the portuguese economic groups, and with other gdp growth potential in turn european countries. furthermore, in terms of traditional and cross selling fees, it's worthwhile to mention a strong growth of bank insurance, reinforcing our strong confidence and leadership in this area, namely in terms of pension plans where our market share achieved 30% and was reinforcing our leadership in this area, and ",
+        "country_keyword": "portuguese",
+        "answer": "Country Keyword: portuguese\nExcerpt: ...\nAnswer: The country is mentioned as a key contributor to the company's growth, with trade finance and export-related fees growing by 40% in the quarter and 63% for the year, due to strategies supporting Portuguese companies that are exporting."
+      },
+      {
+        "augmented": true,
+        "excerpt": "uld be doing as bankers. knowing that we are in a very geared business and we understand that very clearly, and that's why we are so conservative nature. so what i can really tell you sir, is that we are very conservative, we are looking at all the opportunities that we have to provide and to create collateral for ecb, all values, other measures that are available. and of course the fact that the greek banking system is a eurozone country and it is a very solid and has a very high solvency ratio, are very good reasons of why the regulator as well, will take all appropriate measures to safeguard a particular system, given the fact that it has also a very, very low loan-to-deposit ratio overall. so that's why we feel that there is not going to be any kind of crisis that cannot be resolved. a",
+        "country_keyword": "greek",
+        "answer": "Country Keyword: greek\nExcerpt: ...\nAnswer: The Greek banking system is mentioned as a eurozone country with a high solvency ratio and low loan-to-deposit ratio, which provides reassurance about its stability and ability to withstand potential crises."
+      }
+    ],
+    "signature_instructions": "\n    ---CONTEXT---\n    You are an experienced analyst known for your ability to succinctly summarize complex information and extract key insights from various texts.\n\n    ---TASK---\n    Your task is to summarize the role of the country in the given text excerpt, i.e. why the country is mentioned.\n\n    ---GUIDELINES---\n    - Focus on clearly and concisely capturing the main points related to the country's role.\n    - Only include information on one country - the one mentioned in the keyword.\n    ",
+    "signature_prefix": "Answer:"
+  },
+  "relevance_assessor": {
+    "lm": null,
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "country_keyword": "portuguese",
+        "country_role": "Country Keyword: portuguese\nExcerpt: ...\nAnswer: The country is mentioned as a key contributor to the company's growth, with trade finance and export-related fees growing by 40% in the quarter and 63% for the year, due to strategies supporting Portuguese companies that are exporting.",
+        "answer": "Country Keyword: portuguese\nCountry Role: Country Keyword: portuguese Excerpt: ... \nAnswer: yes"
+      },
+      {
+        "augmented": true,
+        "country_keyword": "greek",
+        "country_role": "Country Keyword: greek\nExcerpt: ...\nAnswer: The Greek banking system is mentioned as a eurozone country with a high solvency ratio and low loan-to-deposit ratio, which provides reassurance about its stability and ability to withstand potential crises.",
+        "answer": "Here are the answers:\n\nCountry Keyword: portuguese\nCountry Role: \nAnswer: no\n\nCountry Keyword: italian\nCountry Role: \nAnswer: no\n\nCountry Keyword: greek\nCountry Role: Country Keyword: greek Excerpt: ... \nAnswer: yes"
+      }
+    ],
+    "signature_instructions": "\n    ---CONTEXT---\n    You are an experienced financial analyst known for your ability to assess and interpret subtle indicators of financial stability and solvency in various countries.\n\n    ---TASK---\n    Your task is to assess whether or not the given text excerpt potentially reveals any expectation towards the solvency of the country mentioned.\n\n    ---GUIDELINES---\n    - Focus specifically on potential implications regarding the country's financial stability and ability to meet its obligations.\n    - Financial stability and the country's ability to meet its obligations do not need to be discussed explicitly but can be inferred from the text.\n    - Answer either 'yes' for relevant or 'no' for irrelevant.\n    ",
+    "signature_prefix": "Answer:"
+  },
+  "expectation_assessor": {
+    "lm": null,
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "country_keyword": "portuguese",
+        "country_role": "Country Keyword: portuguese\nExcerpt: ...\nAnswer: The country is mentioned as a key contributor to the company's growth, with trade finance and export-related fees growing by 40% in the quarter and 63% for the year, due to strategies supporting Portuguese companies that are exporting.",
+        "excerpt": "esult of one single area. but i would emphasize, as it was already stated, the contribution of trade finance and export related fees with a growth of 40% in the quarter, and overall in the year of 63%, as the result of the strategies that we put in place to reinforce and support the portuguese companies that are exporting, as well as to be present in the markets with more dynamic activity for the portuguese economic groups, and with other gdp growth potential in turn european countries. furthermore, in terms of traditional and cross selling fees, it's worthwhile to mention a strong growth of bank insurance, reinforcing our strong confidence and leadership in this area, namely in terms of pension plans where our market share achieved 30% and was reinforcing our leadership in this area, and ",
+        "rationale": "Country Keyword: France\nCountry Role: mentioned as a country with positive evolution in both motor and non-motor business\nExcerpt: ...in particular, in the non-motor segment, the increase is driven by the personal lines, while in motor the premiums have progressed thanks to the tariff revaluation applied since 2010, which led to a 5% increase of the average premium in the motor portfolio. as for germany, motor premiums grew by 1.9%, with a 1.6% increase...\n\nReasoning: Let's think step by step in order to produce the answer. We see that France is mentioned as having positive evolution in both motor and non-motor business, which suggests financial stability and ability to meet its obligations.",
+        "answer": "1"
+      },
+      {
+        "augmented": true,
+        "country_keyword": "greek",
+        "country_role": "Country Keyword: greek\nExcerpt: ...\nAnswer: The Greek banking system is mentioned as a eurozone country with a high solvency ratio and low loan-to-deposit ratio, which provides reassurance about its stability and ability to withstand potential crises.",
+        "excerpt": "uld be doing as bankers. knowing that we are in a very geared business and we understand that very clearly, and that's why we are so conservative nature. so what i can really tell you sir, is that we are very conservative, we are looking at all the opportunities that we have to provide and to create collateral for ecb, all values, other measures that are available. and of course the fact that the greek banking system is a eurozone country and it is a very solid and has a very high solvency ratio, are very good reasons of why the regulator as well, will take all appropriate measures to safeguard a particular system, given the fact that it has also a very, very low loan-to-deposit ratio overall. so that's why we feel that there is not going to be any kind of crisis that cannot be resolved. a",
+        "rationale": "Country Keyword: France\nCountry Role: Country mentioned as having a positive evolution in both motor and non-motor business.\nExcerpt: ...in particular, in the non-motor segment, the increase is driven by the personal lines, while in motor the premiums have progressed thanks to the tariff revaluation applied since 2010, which led to a 5% increase of the average premium in the motor portfolio.\n\nReasoning: Let's think step by step in order to assess the expectation towards the solvency of France. We see that there is a positive evolution in both motor and non-motor business, indicating financial stability and ability to meet its obligations. Therefore, I would rate the country's solvency as 1 (somewhat positive).",
+        "answer": "Country Keyword: greece\nCountry Role: mentioned as a eurozone country with a high solvency ratio and low loan-to-deposit ratio\nExcerpt: ...\nReasoning: Let's think step by step in order to assess the expectation towards the solvency of Greece. We see that it is described as a very solid system with a high solvency ratio, which provides reassurance about its stability and ability to withstand potential crises. Additionally, it has a low loan-to-deposit ratio, indicating a strong financial position. Therefore, I would rate the country's solvency as 2 (very positive).\n\nAnswer: 2"
+      }
+    ],
+    "signature_instructions": "\n    ---CONTEXT---\n    You are an experienced financial analyst known for your expertise in evaluating and interpreting expectations related to the financial stability and solvency of countries.\n\n    ---TASK---\n    Please assess the expectation towards the solvency of the country mentioned in the given text excerpt. This includes evaluating the country's financial stability and ability to meet its obligations.    \n    \n    ---GUIDELINES---\n    - Use the following scale for your assessment: -2 = very negative, -1 = somewhat negative, 0 = neutral, 1 = somewhat positive, 2 = very positive\n    ",
+    "signature_prefix": "Answer:",
+    "extended_signature_instructions": "\n    ---CONTEXT---\n    You are an experienced financial analyst known for your expertise in evaluating and interpreting expectations related to the financial stability and solvency of countries.\n\n    ---TASK---\n    Please assess the expectation towards the solvency of the country mentioned in the given text excerpt. This includes evaluating the country's financial stability and ability to meet its obligations.    \n    \n    ---GUIDELINES---\n    - Use the following scale for your assessment: -2 = very negative, -1 = somewhat negative, 0 = neutral, 1 = somewhat positive, 2 = very positive\n    ",
+    "extended_signature_prefix": "Answer:"
+  }
+}

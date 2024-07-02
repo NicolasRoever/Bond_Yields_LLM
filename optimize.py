@@ -14,7 +14,7 @@ def evaluate_expectations_metric(reference_response, generated_response, trace=N
     """Calculate the similarity between a reference response and a generated response.
 
     Parameters:
-    - reference_response (psdy.Example): The predefined response to compare against,
+    - reference_response (psdy.Example): The predefined response to compare against - which is the standard dspy.Example object,
     - generated_response (psdy.Example): The generated response.
 
     Returns:
@@ -27,7 +27,7 @@ def evaluate_expectations_metric(reference_response, generated_response, trace=N
     else:
         pred_expectation_score = extract_last_integer_from_string(generated_response.answer)
 
-    return custom_evaluation_metric(pred_expectation_score, int(reference_response.answer))
+    return custom_evaluation_metric(pred_expectation_score, int(reference_response.sentiment_score))
 
 
 def similar_score_metric(reference_response, generated_response, trace=None):
@@ -79,8 +79,6 @@ def custom_evaluation_metric(pred, actual):
     # If the prediction is not in the right direction, return 0
     return 0
 
-
-    
 
 
 def passage_similarity_metric(reference_text, generated_text, trace=None):
@@ -156,6 +154,37 @@ def extract_last_integer_from_string(text):
     # Return the last integer as an integer
     return int(integers[-1])
 
+def create_dataframe_with_validation_results(validation_examples, llm_chain):
+    """
+    Evaluates the validation examples using the provided LLM chain function and returns a DataFrame with the results.
+
+    Parameters:
+    validation_examples (list): A list of validation examples.
+    llm_chain_function (function): The LLM chain function used to generate predictions.
+
+    Returns:
+    pd.DataFrame: A DataFrame containing the Snippet_ID, Prediction, Reference_Response, and Score for each example.
+    """
+    results = []
+
+    # Process the validation examples
+    for i,x in enumerate(validation_examples):
+        pred = llm_chain(excerpt=x.excerpt, country_keyword=x.country_keyword)
+        score = evaluate_expectations_metric(reference_response=x, generated_response=pred)
+        
+        # Append the results to the list
+        results.append({
+            'Snippet_ID': x.snippet_id,
+            'Prediction': pred.answer,
+            'Reference_Response': x.sentiment_score,
+            'Full_Response': pred,
+            'Evaluation_Score': score
+        })
+
+        print(i)
+
+
+    return pd.DataFrame(results)
 
 
 # LATER FOR OPTIMIZATION: optimize input/output examples for prompt of sentiment llm based on hand-coded examples

@@ -1,12 +1,15 @@
 import pytest
 import re
 import dspy
+import numpy as np
+import pandas as pd
 from config import convert_to_integer_if_answer_is_valid
 from optimize import extract_last_integer_from_string, custom_evaluation_metric
 from signatures.expectations import ExpectationAssessor
 from signatures.summarizer import RoleSummarizer
 from signatures.relevance import RelevanceAssessor, extract_relevance_as_yes_or_no
 from module_v002 import FullLLMChain
+from data.preprocess import dataframe_to_examples, create_dspy_examples_train_test_validation_sets
 
 
 llama3_8b = dspy.OllamaLocal(model = "llama3:8b",
@@ -222,6 +225,34 @@ def test_if_snippet_is_not_relevant():
     
 
 
+@pytest.fixture
+def sample_data():
+    # Generate a sample DataFrame
+    np.random.seed(42)
+    num_samples = 300
+    data = pd.DataFrame({
+        'Snippet': [f'Snippet {i}' for i in range(num_samples)],
+        'Keyword': np.random.choice(['Keyword1', 'Keyword2', 'Keyword3'], size=num_samples),
+        'Snippet_ID': range(num_samples),
+        'Final Combined': np.random.choice([-2, -1, 0, 1, 2, 99], size=num_samples),
+        'Final Relevance Score': np.random.choice([0, 1], size=num_samples)
+    })
+    return data
+
+def test_create_dspy_examples_train_test_validation_sets(sample_data):
+    train_size = 25
+    test_size = 25
+    validation_size = 50
+    random_seed = 42
+    
+    train_examples, test_examples, validation_examples = create_dspy_examples_train_test_validation_sets(
+        sample_data, train_size=train_size, test_size=test_size, validation_size=validation_size, random_seed=random_seed
+    )
+    
+    # Check the lengths of the resulting sets
+    assert len(train_examples) == train_size, f"Expected train size: {train_size}, but got: {len(train_examples)}"
+    assert len(test_examples) == test_size, f"Expected test size: {test_size}, but got: {len(test_examples)}"
+    assert len(validation_examples) == validation_size, f"Expected validation size: {validation_size}, but got: {len(validation_examples)}"
     
     
 
