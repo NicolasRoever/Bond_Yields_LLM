@@ -19,4 +19,4 @@ __pycache__/
 # Ignore other unwanted files
 *.log
 *.bak
-.DS_Store
+.DS_Storeenvironment.env
