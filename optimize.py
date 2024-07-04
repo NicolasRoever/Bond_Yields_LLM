@@ -6,6 +6,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from IPython.core.display import Markdown
 import pdb
 import re
+import io
+import contextlib
 
 
 
@@ -21,34 +23,22 @@ def evaluate_expectations_metric(reference_response, generated_response, trace=N
     - boolen: True if the reference response and the generated response are the same, False otherwise.
     """
 
-    if generated_response.answer == 'no':
-        pred_expectation_score = 99
+    if generated_response["answer_relevance_assessor"] == 'no':
+
+        if reference_response.sentiment_score == 99:
+            return 1
+        
+        if reference_response.sentiment_score == 0:
+            return 1
+        
+        else:
+            return 0
 
     else:
-        pred_expectation_score = extract_last_integer_from_string(generated_response.answer)
+        pred_expectation_score = extract_last_integer_from_string(generated_response["answer_expectation_assessor"])
 
     return custom_evaluation_metric(pred_expectation_score, int(reference_response.sentiment_score))
 
-
-def similar_score_metric(reference_response, generated_response, trace=None):
-    """
-    Calculate the similarity between a reference response and a generated response.
-
-    Parameters:
-    - reference_response (psdy.Example): The predefined response to compare against, 
-    - generated_response (psdy.Example): The generated response.
-
-    Returns:
-    - boolen: True if the reference response and the generated response are the same, False otherwise.
-    """
-
-    truth_score = reference_response.answer
-    pred_score = generated_response.answer.split("Answer:", 1)[1].strip()
-
-    if truth_score == pred_score:
-        return True
-    else:
-        return False
     
 def custom_evaluation_metric(pred, actual):
     """
@@ -66,8 +56,11 @@ def custom_evaluation_metric(pred, actual):
     if pred == None:
         print("None value in prediction")
         return 0
+    
+    #If prediction is 0 and actual value is 99, return 1 (this is the no relevance case)
+    if pred == 0 and actual == 99:
+        return 1
        
-
     # If the prediction is the same as the actual value, return 1
     if pred == actual:
         return 1
@@ -175,16 +168,60 @@ def create_dataframe_with_validation_results(validation_examples, llm_chain):
         # Append the results to the list
         results.append({
             'Snippet_ID': x.snippet_id,
-            'Prediction': pred.answer,
+            'Excerpt': x.excerpt,
+            'Answer_Role_Summarizer': pred["answer_role_summarizer"],
+            'Answer_Relevance_Assessor': pred["answer_relevance_assessor"],
+            'Prediction': pred["answer_expectation_assessor"],
+            'Rationale_for_Prediction': pred["rationale_expectation_assessor"],
             'Reference_Response': x.sentiment_score,
-            'Full_Response': pred,
             'Evaluation_Score': score
         })
 
-        print(i)
+        print(f"Finished validation example {i} out of {len(validation_examples) } ({i/len(validation_examples)*100:.2f}%)")
 
 
     return pd.DataFrame(results)
+
+def similar_score_metric(reference_response, generated_response, trace=None):
+    """
+    Calculate the similarity between a reference response and a generated response.
+
+    Parameters:
+    - reference_response (psdy.Example): The predefined response to compare against, 
+    - generated_response (psdy.Example): The generated response.
+
+    Returns:
+    - boolen: True if the reference response and the generated response are the same, False otherwise.
+    """
+
+    truth_score = reference_response.answer
+    pred_score = generated_response.answer.split("Answer:", 1)[1].strip()
+
+    if truth_score == pred_score:
+        return True
+    else:
+        return False
+    
+def capture_and_save_output(func, file_name, *args, **kwargs):
+    """
+    Captures the printed output of a function and saves it to a text file.
+    
+    Parameters:
+    func (callable): The function whose output is to be captured.
+    file_name (str): The name of the file to save the output.
+    *args: Variable length argument list to pass to the function.
+    **kwargs: Arbitrary keyword arguments to pass to the function.
+    """
+    output_buffer = io.StringIO()
+    with contextlib.redirect_stdout(output_buffer):
+        func(*args, **kwargs)
+    
+    # Get the output as a string
+    captured_output = output_buffer.getvalue()
+
+    # Write the captured output to the file
+    with open(file_name, "w") as file:
+        file.write(captured_output)
 
 
 # LATER FOR OPTIMIZATION: optimize input/output examples for prompt of sentiment llm based on hand-coded examples

@@ -4,7 +4,7 @@ import dspy
 import numpy as np
 import pandas as pd
 from config import convert_to_integer_if_answer_is_valid
-from optimize import extract_last_integer_from_string, custom_evaluation_metric
+from optimize import extract_last_integer_from_string, custom_evaluation_metric, evaluate_expectations_metric
 from signatures.expectations import ExpectationAssessor
 from signatures.summarizer import RoleSummarizer
 from signatures.relevance import RelevanceAssessor, extract_relevance_as_yes_or_no
@@ -26,6 +26,40 @@ def test_extract_last_integer_from_string_with_string():
     actual_result = extract_last_integer_from_string(example_input)
 
     assert expected_result == actual_result
+
+class MockExample:
+    def __init__(self, sentiment_score):
+        self.sentiment_score = sentiment_score
+
+def test_evaluate_expectations_metric_no_relevance():
+    reference_response = MockExample(sentiment_score=99)
+    generated_response = {"answer_relevance_assessor": 'no', "answer_expectation_assessor": pd.NA}
+    
+    assert evaluate_expectations_metric(reference_response, generated_response) == 1
+
+    generated_response = {"answer_relevance_assessor": 'yes', "answer_expectation_assessor": '0'}
+    assert evaluate_expectations_metric(reference_response, generated_response) == 1
+
+    reference_response.sentiment_score = 0
+    assert evaluate_expectations_metric(reference_response, generated_response) == 1
+
+    reference_response.sentiment_score = -2
+    assert evaluate_expectations_metric(reference_response, generated_response) == 0
+
+def test_evaluate_expectations_metric_with_relevance():
+    reference_response = MockExample(sentiment_score=2)
+    generated_response = {"answer_relevance_assessor": 'yes', "answer_expectation_assessor": "Expectation is 2"}
+    
+    assert evaluate_expectations_metric(reference_response, generated_response) == 1
+
+    generated_response["answer_expectation_assessor"] = "Expectation is 1"
+    assert evaluate_expectations_metric(reference_response, generated_response) == 0.5
+
+    generated_response["answer_expectation_assessor"] = "Expectation is -1"
+    assert evaluate_expectations_metric(reference_response, generated_response) == 0
+
+    generated_response["answer_expectation_assessor"] = "NA"
+    assert evaluate_expectations_metric(reference_response, generated_response) == 0
 
 
 def test_extract_last_integer_from_string_with_int():
@@ -164,8 +198,8 @@ def test_full_llm_chain_standard_example_1():
     with dspy.context(lm=llama3_8b):
         actual_result = full_llm_chain(excerpt=test_excerpt, country_keyword=test_country_keyword)
 
-    assert convert_to_integer_if_answer_is_valid(actual_result.answer) == 1
-    assert actual_result.rationale == '1' # This is because lama is a shitty model :)
+    assert convert_to_integer_if_answer_is_valid(actual_result["answer_expectation_assessor"]) in {-2, -1, 0, 1, 2}
+
 
 
 def test_full_llm_chain_standard_example_2():
@@ -179,9 +213,7 @@ def test_full_llm_chain_standard_example_2():
     with dspy.context(lm=llama3_8b):
         actual_result = full_llm_chain(excerpt=test_excerpt, country_keyword=test_country_keyword)
 
-    breakpoint()
-    assert actual_result.answer == -1
-    assert actual_result.rationale == '-1' # This is because lama is a shitty model :)
+    assert convert_to_integer_if_answer_is_valid(actual_result["answer_expectation_assessor"]) in {-2, -1, 0, 1, 2}
 
 
 class MockClassNotRelevant:

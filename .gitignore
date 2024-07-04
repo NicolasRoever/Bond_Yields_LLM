@@ -4,6 +4,7 @@ venv/
 env/
 environment.env
 optimized_llm_chains/
+validation/
 
 # Ignore Python cache files
 __pycache__/
